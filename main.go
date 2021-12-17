@@ -17,17 +17,10 @@ func main() {
 	// Load the templates
 	r.LoadHTMLGlob("templates/*")
 
-	// Setup API
-	ApiRouter(r.Group("/api"))
-
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
-	r.Run()
-}
-
-func ApiRouter(r *gin.RouterGroup) {
 	r.POST("/upload", func(c *gin.Context) {
 		form, err := c.MultipartForm()
 		if err != nil {
@@ -40,6 +33,10 @@ func ApiRouter(r *gin.RouterGroup) {
 			log.Println(file.Filename)
 		}
 
-		c.String(http.StatusOK, fmt.Sprintf("%d files uploaded!\n", len(files)))
+		log.Printf("%d files uploaded\n", len(files))
+
+		c.String(http.StatusOK, fmt.Sprintf("%d files uploaded\n", len(files)))
 	})
+
+	r.Run()
 }

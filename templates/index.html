@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delen</title>
+
+    <script src="https://unpkg.com/htmx.org@1.6.1" integrity="sha384-tvG/2mnCFmGQzYC1Oh3qxQ7CkQ9kMzYjWZSNtrRZygHPDDqottzEJsqS4oUVodhW" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -13,10 +15,13 @@
     </header>
 
     <main>
-        <article>
+        <article hx-target="this">
             <h2>Upload a file</h2>
 
-            <p>Hello World</p>
+            <form id="form" hx-encoding="multipart/form-data" hx-post="/upload">
+                <input type="file" name="files[]">
+                <button>Upload</button>
+            </form>
         </article>
 
         <article>
