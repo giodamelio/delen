@@ -2,10 +2,10 @@
     just --list
 
 migrate:
-    migrate -source file://db/migrations/ -database sqlite://db/dev.sqlite up
+    goose -dir db/migrations/ sqlite ./db/dev.sqlite up
 
 create-migration name:
-    migrate create -dir ./db/migrations/ -seq -ext sql {{name}}
+    goose -dir db/migrations/ sqlite create {{name}} sql
 
 install-tools:
-    go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+    go install github.com/pressly/goose/v3/cmd/goose@latest
