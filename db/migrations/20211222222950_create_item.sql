@@ -1,10 +1,10 @@
 -- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS item (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id          SERIAL PRIMARY KEY,
     name        TEXT NOT NULL,
     type        TEXT,
-    contents    BLOB NOT NULL
+    contents    BYTEA NOT NULL
 );
 -- +goose StatementEnd
 
