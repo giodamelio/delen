@@ -5,7 +5,35 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
+
+const createItem = `-- name: CreateItem :one
+INSERT INTO item (
+  name, type, contents
+) VALUES (
+  $1, $2, $3
+)
+RETURNING id, name, type, contents
+`
+
+type CreateItemParams struct {
+	Name     string
+	Type     sql.NullString
+	Contents []byte
+}
+
+func (q *Queries) CreateItem(ctx context.Context, arg CreateItemParams) (Item, error) {
+	row := q.db.QueryRowContext(ctx, createItem, arg.Name, arg.Type, arg.Contents)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Type,
+		&i.Contents,
+	)
+	return i, err
+}
 
 const listItems = `-- name: ListItems :many
 SELECT id, name, type, contents FROM item
