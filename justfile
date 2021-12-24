@@ -7,6 +7,9 @@ migrate:
 create-migration name:
     goose -dir db/migrations/ sqlite create {{name}} sql
 
+sql:
+    usql pg://postgres@localhost/app?sslmode=disable
+
 install-tools:
     go install github.com/pressly/goose/v3/cmd/goose@latest
     go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
