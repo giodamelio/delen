@@ -2,10 +2,10 @@
     just --list
 
 migrate:
-    goose -dir db/migrations/ sqlite ./db/dev.sqlite up
+    goose -dir db/migrations/ postgres "user=postgres dbname=app sslmode=disable" up
 
 create-migration name:
-    goose -dir db/migrations/ sqlite create {{name}} sql
+    goose -dir db/migrations/ postgres "user=postgres dbname=app sslmode=disable" create {{name}} sql
 
 sql:
     usql pg://postgres@localhost/app?sslmode=disable
