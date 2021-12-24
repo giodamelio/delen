@@ -13,6 +13,9 @@ create-migration name:
 sql:
     usql pg://postgres@localhost/app?sslmode=disable
 
+sql-generate:
+    sqlc generate
+
 install-tools:
     go install github.com/pressly/goose/v3/cmd/goose@latest
     go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
