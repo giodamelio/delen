@@ -1,6 +1,9 @@
 @_list:
     just --list
 
+run:
+    go run ./...
+
 migrate:
     goose -dir db/migrations/ postgres "user=postgres dbname=app sslmode=disable" up
 
