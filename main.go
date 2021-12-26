@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/elnormous/contenttype"
 	"github.com/gin-gonic/gin"
@@ -26,14 +28,20 @@ func setupDb() (*db.Queries, error) {
 // Add the Accepted header to the request context
 func AcceptHeader() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		log.Printf("Format: %s, length: %d\n", c.GetString("format"), len(c.GetString("format")))
+		if c.GetString("format") != "" {
+			log.Println("AcceptHeader middleware already run")
+			c.Next()
+			return
+		}
+
+		// Set the format based on the Accept header
 		availableMediaTypes := []contenttype.MediaType{
 			contenttype.NewMediaType("text/html"),
 			contenttype.NewMediaType("application/json"),
 		}
-
 		accepted, _, _ := contenttype.GetAcceptableMediaType(c.Request, availableMediaTypes)
-		log.Println("Accepted media type:", accepted.String())
-		c.Set("accept", accepted.String())
+		c.Set("format", accepted.String())
 
 		c.Next()
 	}
@@ -52,13 +60,15 @@ func main() {
 
 	// Handle the accept header
 	r.Use(AcceptHeader())
+	r.Use(AcceptHeader())
 
 	// Load the templates
 	r.LoadHTMLGlob("templates/*")
 
 	r.GET("/", func(c *gin.Context) {
-		accept := c.GetString("accept")
-		if accept == "application/json" {
+		format := c.GetString("format")
+		log.Printf("Format: %s\n", format)
+		if format == "application/json" {
 			c.JSON(http.StatusOK, gin.H{"todo": "Not implemented in JSON"})
 		} else {
 			c.HTML(http.StatusOK, "index.html", gin.H{})
@@ -96,11 +106,33 @@ func main() {
 
 		log.Printf("%d files uploaded\n", len(files))
 
-		accept := c.GetString("accept")
-		if accept == "application/json" {
+		format := c.GetString("format")
+		if format == "application/json" {
 			c.JSON(http.StatusOK, gin.H{"todo": "Not implemented in JSON"})
 		} else {
 			c.String(http.StatusOK, fmt.Sprintf("%d files uploaded\n", len(files)))
+		}
+	})
+
+	// If the route is not found, check if there is a .json or .html on the end and redirect
+	r.NoRoute(func(c *gin.Context) {
+		log.Println("NoRoute hit")
+
+		// Potentially override based on the file path extension
+		extension := filepath.Ext(c.Request.URL.Path)
+		log.Printf("Extension: %s\n", extension)
+		if extension == ".json" {
+			c.Set("format", "application/json")
+			a := strings.TrimSuffix(c.Request.URL.Path, extension)
+			log.Printf("New path: %s\n", a)
+			c.Request.URL.Path = a
+			r.HandleContext(c)
+			return
+		} else if extension == ".html" {
+			c.Set("format", "text/html")
+			c.Request.URL.Path = strings.TrimSuffix(c.Request.URL.Path, extension)
+			r.HandleContext(c)
+			return
 		}
 	})
 
