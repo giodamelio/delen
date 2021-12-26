@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -39,7 +40,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Use(middleware.Logger)
+	r.Use(requestLogger())
 	r.Use(formatDecider)
 	r.Use(middleware.Recoverer)
 
@@ -60,6 +61,28 @@ func main() {
 	logRoutes(r)
 
 	http.ListenAndServe(":8080", r)
+}
+
+func requestLogger() func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			t1 := time.Now()
+			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+
+			h.ServeHTTP(ww, r)
+
+			difference := time.Since(t1)
+
+			log.Print("Should be logging a request right now!")
+			log.Info().
+				Str("method", r.Method).
+				Str("path", r.URL.Path).
+				Int("status", ww.Status()).
+				Int("bytesWritten", ww.BytesWritten()).
+				Dur("duration", difference).
+				Msgf("%s %s - %d %s", r.Method, r.URL.Path, ww.Status(), difference)
+		})
+	}
 }
 
 // Add extra routes to override the return format via path file extensions
