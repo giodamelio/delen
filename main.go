@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -39,15 +40,54 @@ func main() {
 
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		format, exists := ctx.Value("format").(string)
-		// Set the format to text/html by default
-		if !exists {
-			format = "text/html"
-		}
+		format := ctx.Value(formatKey{}).(string)
 
 		log.Println("Format:", format)
-		w.Write([]byte("pong"))
+		w.Write([]byte(fmt.Sprintln("PONG")))
+		w.Write([]byte(fmt.Sprintln("format:", format)))
 	})
 
+	addPostfixRoutes(r, map[string]string{
+		".json": "application/json",
+		".html": "text/html",
+	})
+	logRoutes(r)
+
 	http.ListenAndServe(":8080", r)
+}
+
+// Add extra routes to override the return format via path file extensions
+func addPostfixRoutes(r *chi.Mux, formats map[string]string) {
+	chi.Walk(r, func(method, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		for extension, format := range formats {
+			r.
+				// Inline middleware to overwrite the format
+				With(overwriteFormatHandler(format)).
+				// Register the original handler to the route path plus the new extension
+				Method(method, route+extension, handler)
+		}
+
+		return nil
+	})
+}
+
+// Middleware to overwrite the format value of a Context
+func overwriteFormatHandler(format string) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			log.Println("overridding format via path extension:", format)
+			ctx = context.WithValue(ctx, formatKey{}, format)
+			h.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+// Log out routes
+func logRoutes(r *chi.Mux) {
+	log.Println("Registered routes:")
+	chi.Walk(r, func(method, route string, _ http.Handler, _ ...func(http.Handler) http.Handler) error {
+		log.Println(" ", method, route)
+		return nil
+	})
 }
