@@ -41,6 +41,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 	r.Use(formatDecider)
+	r.Use(middleware.Recoverer)
 
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
