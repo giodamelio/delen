@@ -73,7 +73,6 @@ func requestLogger() func(http.Handler) http.Handler {
 
 			difference := time.Since(t1)
 
-			log.Print("Should be logging a request right now!")
 			log.Info().
 				Str("method", r.Method).
 				Str("path", r.URL.Path).
