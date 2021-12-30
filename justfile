@@ -2,7 +2,7 @@
     just --list
 
 # Run the app
-run:
+go:
     go run ./...
 
 # Run all the migrations
