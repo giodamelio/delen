@@ -11,13 +11,24 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 # Install Just
 RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin/
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Install some system utils
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends bzip2
 
-# [Optional] Uncomment the next lines to use go get to install anything else you need
-# USER vscode
-# RUN go get -x <your-dependency-or-tool>
+# Install Goose Db Migrations tools
+RUN wget https://github.com/pressly/goose/releases/download/v3.5.0/goose_linux_x86_64 -O goose \
+  && install goose /usr/local/bin
 
-# [Optional] Uncomment this line to install global node packages.
-# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+# Install SQLC to generate Go sql code
+RUN wget https://github.com/kyleconroy/sqlc/releases/download/v1.11.0/sqlc_1.11.0_linux_amd64.zip -O sqlc.zip \
+  && unzip sqlc.zip \
+  && install sqlc /usr/local/bin
+
+# Download usql sql cli
+# Due to an outdated glibc in bullseye, install it via go get
+# That doesn't guerentee the version, but that should be fine in this case
+# RUN wget https://github.com/xo/usql/releases/download/v0.9.5/usql-0.9.5-linux-amd64.tar.bz2 -O usql.zip \
+#   && tar -xf usql.zip \
+#   && install usql /usr/local/bin
+USER vscode
+RUN go install github.com/xo/usql@master
