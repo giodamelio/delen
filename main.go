@@ -10,34 +10,47 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/unrolled/render"
 )
 
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
-	r := chi.NewRouter()
+	router := chi.NewRouter()
 
-	r.Use(requestLogger())
-	r.Use(formatDecider)
-	r.Use(middleware.Recoverer)
+	router.Use(requestLogger())
+	router.Use(formatDecider)
+	router.Use(middleware.Recoverer)
 
-	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+	renderer := render.New()
+
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		format := ctx.Value(formatKey{}).(string)
+
+		if format == "application/json" {
+			renderer.JSON(w, http.StatusOK, nil)
+		} else {
+			renderer.HTML(w, http.StatusOK, "index.html", nil)
+		}
+	})
+
+	router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		format := ctx.Value(formatKey{}).(string)
 
 		log.Print("Format:", format)
 
-		w.Write([]byte(fmt.Sprintln("PONG")))
-		w.Write([]byte(fmt.Sprintln("format:", format)))
+		renderer.Text(w, http.StatusOK, fmt.Sprintf("PONG\nformat: %s", format))
 	})
 
-	addPostfixRoutes(r, map[string]string{
+	addPostfixRoutes(router, map[string]string{
 		".json": "application/json",
 		".html": "text/html",
 	})
-	logRoutes(r)
+	logRoutes(router)
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8080", router)
 }
 
 // Add extra routes to override the return format via path file extensions
