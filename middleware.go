@@ -26,11 +26,19 @@ func formatDecider(next http.Handler) http.Handler {
 
 		// Parse the accept header to detect format
 		// Defaults to first media type if none is provided
+		// If invalid media type is sent, default to text/html
 		availableMediaTypes := []contenttype.MediaType{
 			contenttype.NewMediaType("text/html"),
 			contenttype.NewMediaType("application/json"),
 		}
-		accepted, _, _ := contenttype.GetAcceptableMediaType(r, availableMediaTypes)
+		accepted, _, err := contenttype.GetAcceptableMediaType(r, availableMediaTypes)
+		if err != nil {
+			log.Trace().Err(err).Msg("Accept header error")
+			ctx = context.WithValue(ctx, formatKey{}, "text/html")
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+
 		log.Trace().Msgf("setting format as: %s", accepted.String())
 		ctx = context.WithValue(ctx, formatKey{}, accepted.String())
 
