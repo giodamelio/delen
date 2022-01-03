@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -39,9 +38,17 @@ func main() {
 		ctx := r.Context()
 		format := ctx.Value(formatKey{}).(string)
 
-		log.Print("Format:", format)
+		data := struct {
+			Message string `json:"message"`
+		}{
+			Message: "PONG",
+		}
 
-		renderer.Text(w, http.StatusOK, fmt.Sprintf("PONG\nformat: %s", format))
+		if format == "application/json" {
+			renderer.JSON(w, http.StatusOK, data)
+		} else {
+			renderer.HTML(w, http.StatusOK, "ping.html", data)
+		}
 	})
 
 	addPostfixRoutes(router, map[string]string{
