@@ -34,6 +34,23 @@ func main() {
 		}
 	})
 
+	router.Post("/upload", func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		format := ctx.Value(formatKey{}).(string)
+
+		data := struct {
+			Message string `json:"message"`
+		}{
+			Message: "PONG",
+		}
+
+		if format == "application/json" {
+			renderer.JSON(w, http.StatusOK, data)
+		} else {
+			renderer.HTML(w, http.StatusOK, "upload.html", data)
+		}
+	})
+
 	router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		format := ctx.Value(formatKey{}).(string)
