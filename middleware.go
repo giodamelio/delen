@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/elnormous/contenttype"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog/log"
 )
@@ -23,9 +24,15 @@ func formatDecider(next http.Handler) http.Handler {
 			return
 		}
 
-		// If the format does not exist, set it to text/html by default
-		log.Trace().Msgf("setting format as: %s", "text/html")
-		ctx = context.WithValue(ctx, formatKey{}, "text/html")
+		// Parse the accept header to detect format
+		// Defaults to first media type if none is provided
+		availableMediaTypes := []contenttype.MediaType{
+			contenttype.NewMediaType("text/html"),
+			contenttype.NewMediaType("application/json"),
+		}
+		accepted, _, _ := contenttype.GetAcceptableMediaType(r, availableMediaTypes)
+		log.Trace().Msgf("setting format as: %s", accepted.String())
+		ctx = context.WithValue(ctx, formatKey{}, accepted.String())
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
