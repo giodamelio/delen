@@ -1,9 +1,30 @@
+use std::collections::HashMap;
+
+use rocket::serde::json::Json;
+use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
 use rocket::{get, launch, routes};
+use rocket_dyn_templates::Template;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+#[derive(Serialize, Debug)]
+#[serde(crate = "rocket::serde")]
+struct File {
+    name: &'static str,
+}
+
+#[get("/", format = "html", rank = 1)]
+fn index_html() -> Template {
+    let files: Vec<File> = vec![File { name: "foo.txt" }, File { name: "bar.txt" }];
+    let mut map: HashMap<&str, Vec<File>> = HashMap::new();
+    map.insert("files", files);
+
+    Template::render("index", map)
+}
+
+#[get("/", format = "json", rank = 2)]
+fn index_json() -> Json<Vec<File>> {
+    let files: Vec<File> = vec![File { name: "foo.txt" }, File { name: "bar.txt" }];
+    Json(files)
 }
 
 #[get("/hello/<name>")]
@@ -19,5 +40,7 @@ async fn delay(seconds: u64) -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, hello, delay])
+    rocket::build()
+        .mount("/", routes![index_json, index_html, hello, delay])
+        .attach(Template::fairing())
 }
