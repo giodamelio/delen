@@ -47,4 +47,5 @@ fn rocket() -> _ {
         .mount("/", routes![index_json, index_html, hello, delay])
         .attach(Template::fairing())
         .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
+        .attach(fairings::ExtensionRewrite::new(".html", Accept::HTML))
 }
