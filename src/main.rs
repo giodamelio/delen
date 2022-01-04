@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use rocket::http::Accept;
 use rocket::serde::json::Json;
 use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
@@ -45,5 +46,5 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index_json, index_html, hello, delay])
         .attach(Template::fairing())
-        .attach(fairings::JSONExtensionRewrite)
+        .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
 }

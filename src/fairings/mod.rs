@@ -1,16 +1,28 @@
 use rocket::{
     fairing::{Fairing, Info, Kind},
-    http::Accept,
+    http::{Accept, Header},
     Data, Request,
 };
 
-pub struct JSONExtensionRewrite;
+pub struct ExtensionRewrite {
+    extension: &'static str,
+    header: Header<'static>,
+}
+
+impl ExtensionRewrite {
+    pub fn new(extension: &'static str, header: Accept) -> Self {
+        ExtensionRewrite {
+            extension,
+            header: header.into(),
+        }
+    }
+}
 
 #[rocket::async_trait]
-impl Fairing for JSONExtensionRewrite {
+impl Fairing for ExtensionRewrite {
     fn info(&self) -> Info {
         Info {
-            name: "JSON Extension Rewriter",
+            name: "Extension Rewriter",
             kind: Kind::Request,
         }
     }
@@ -20,14 +32,14 @@ impl Fairing for JSONExtensionRewrite {
 
         // If the path ends with a file extension, remove it and add a matching Accept header
         // If the mapping breaks, keep the original path
-        let new_origin = if origin.path().ends_with(".json") {
+        let new_origin = if origin.path().ends_with(self.extension) {
             // Add accept header
-            request.replace_header(Accept::JSON);
+            request.replace_header(self.header.clone());
 
             // Remove the extension from the path
             // It is safe to unwrap the `strip_suffix` because we already checked it's existance
             origin
-                .map_path(|path| path.strip_suffix(".json").unwrap())
+                .map_path(|path| path.strip_suffix(self.extension).unwrap())
                 .unwrap_or_else(|| origin.to_owned())
         } else {
             origin.to_owned()
