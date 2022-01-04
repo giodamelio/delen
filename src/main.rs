@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use rocket::fairing::AdHoc;
+use rocket::http::Accept;
 use rocket::serde::json::Json;
 use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
@@ -43,4 +45,29 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index_json, index_html, hello, delay])
         .attach(Template::fairing())
+        .attach(AdHoc::on_request(
+            "ExtensionOverride",
+            |request, _response| {
+                Box::pin(async move {
+                    let origin = request.uri().clone();
+
+                    // If the path ends with a file extension, remove it and add a matching Accept header
+                    // If the mapping breaks, keep the original path
+                    let new_origin = if origin.path().ends_with(".json") {
+                        // Add accept header
+                        request.replace_header(Accept::JSON);
+
+                        // Remove the extension from the path
+                        // It is safe to unwrap the `strip_suffix` because we already checked it's existance
+                        origin
+                            .map_path(|path| path.strip_suffix(".json").unwrap())
+                            .unwrap_or_else(|| origin.to_owned())
+                    } else {
+                        origin.to_owned()
+                    };
+
+                    request.set_uri(new_origin);
+                })
+            },
+        ))
 }
