@@ -235,6 +235,7 @@ version = "0.1.0"
 dependencies = [
  "rocket",
  "rocket_dyn_templates",
+ "tokio",
 ]
 
 [[package]]
@@ -1726,6 +1727,7 @@ dependencies = [
  "mio 0.7.14",
  "num_cpus",
  "once_cell",
+ "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "tokio-macros",
