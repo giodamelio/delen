@@ -1,0 +1,21 @@
+{
+  "db": "SQLite",
+  "af336298b004158de5865ad633e95e64c5d2a0a4319226546912398874d1eefb": {
+    "query": "SELECT (150) as num",
+    "describe": {
+      "columns": [
+        {
+          "name": "num",
+          "ordinal": 0,
+          "type_info": "Int"
+        }
+      ],
+      "parameters": {
+        "Right": 0
+      },
+      "nullable": [
+        false
+      ]
+    }
+  }
+}

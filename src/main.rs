@@ -6,6 +6,7 @@ use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
 use rocket::{get, routes};
 use rocket_dyn_templates::Template;
+use sqlx::{sqlite, Pool, Sqlite};
 
 mod fairings;
 
@@ -16,12 +17,17 @@ struct File {
 }
 
 #[get("/", format = "html", rank = 1)]
-fn index_html() -> Template {
+async fn index_html(pool: &rocket::State<Pool<Sqlite>>) -> Result<Template> {
     let files: Vec<File> = vec![File { name: "foo.txt" }, File { name: "bar.txt" }];
     let mut map: HashMap<&str, Vec<File>> = HashMap::new();
     map.insert("files", files);
 
-    Template::render("index", map)
+    let row = sqlx::query!("SELECT (150) as num")
+        .fetch_one(pool.inner())
+        .await?;
+    println!("Result: {:?}", row);
+
+    Ok(Template::render("index", map))
 }
 
 #[get("/", format = "json", rank = 2)]
@@ -41,26 +47,25 @@ async fn delay(seconds: u64) -> String {
     format!("Waited for {} seconds", seconds)
 }
 
-// #[launch]
-// fn rocket() -> _ {
-//     rocket::build()
-//         .mount("/", routes![index_json, index_html, hello, delay])
-//         .attach(Template::fairing())
-//         .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
-//         .attach(fairings::ExtensionRewrite::new(".html", Accept::HTML))
-// }
-
 #[tokio::main]
-async fn main() -> Result<(), rocket::Error> {
-    rocket::build()
+async fn main() -> Result<()> {
+    // Connect to the database
+    let pool = sqlite::SqlitePoolOptions::new()
+        .connect("sqlite://db.sqlite")
+        .await?;
+
+    // Configure the server
+    let rocket = rocket::build()
         .mount("/", routes![index_json, index_html, hello, delay])
         .attach(Template::fairing())
         .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
         .attach(fairings::ExtensionRewrite::new(".html", Accept::HTML))
-        .ignite()
-        .await?
-        .launch()
-        .await
+        .manage::<Pool<Sqlite>>(pool);
+
+    // Start the server
+    rocket.ignite().await?.launch().await?;
+
+    Ok(())
 }
 
 // Below is a hack to make Rocket and Anyhow play nice
