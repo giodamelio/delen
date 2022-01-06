@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::path::Path;
 
 use rocket::http::Accept;
 use rocket::serde::json::Json;
@@ -6,7 +7,7 @@ use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
 use rocket::{get, routes};
 use rocket_dyn_templates::Template;
-use sqlx::{sqlite, Pool, Sqlite};
+use sqlx::{migrate::Migrator, sqlite, Pool, Sqlite};
 
 mod fairings;
 
@@ -56,6 +57,10 @@ async fn main() -> Result<()> {
     let pool = sqlite::SqlitePoolOptions::new()
         .connect("sqlite://db.sqlite")
         .await?;
+
+    // Run any outstanding migrations
+    let migrator = Migrator::new(Path::new("./migrations")).await?;
+    migrator.run(&pool).await?;
 
     // Configure the server
     let rocket = rocket::build()
