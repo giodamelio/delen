@@ -16,8 +16,11 @@ struct File {
     name: &'static str,
 }
 
+// Type alias for the db connection
+type DB = Pool<Sqlite>;
+
 #[get("/", format = "html", rank = 1)]
-async fn index_html(pool: &rocket::State<Pool<Sqlite>>) -> Result<Template> {
+async fn index_html(pool: &rocket::State<DB>) -> Result<Template> {
     let files: Vec<File> = vec![File { name: "foo.txt" }, File { name: "bar.txt" }];
     let mut map: HashMap<&str, Vec<File>> = HashMap::new();
     map.insert("files", files);
@@ -60,7 +63,7 @@ async fn main() -> Result<()> {
         .attach(Template::fairing())
         .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
         .attach(fairings::ExtensionRewrite::new(".html", Accept::HTML))
-        .manage::<Pool<Sqlite>>(pool);
+        .manage::<DB>(pool);
 
     // Start the server
     rocket.ignite().await?.launch().await?;
