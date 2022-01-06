@@ -7,10 +7,12 @@ use rocket::serde::Serialize;
 use rocket::tokio::time::{sleep, Duration};
 use rocket::{get, routes};
 use rocket_dyn_templates::Template;
-use sqlx::{migrate::Migrator, sqlite, Pool, Sqlite};
+use sqlx::{migrate::Migrator, sqlite};
 
+use db::DB;
 use error::Result;
 
+mod db;
 mod error;
 mod fairings;
 
@@ -20,19 +22,20 @@ struct File {
     name: &'static str,
 }
 
-// Type alias for the db connection
-type DB = Pool<Sqlite>;
-
 #[get("/", format = "html", rank = 1)]
-async fn index_html(pool: &rocket::State<DB>) -> Result<Template> {
+async fn index_html(pool: &rocket::State<DB>, item_count: db::ItemCount) -> Result<Template> {
     let files: Vec<File> = vec![File { name: "foo.txt" }, File { name: "bar.txt" }];
     let mut map: HashMap<&str, Vec<File>> = HashMap::new();
     map.insert("files", files);
 
-    let row = sqlx::query!("SELECT (150) as num")
+    let count = sqlx::query!("SELECT count(*) as count FROM item")
         .fetch_one(pool.inner())
-        .await?;
-    println!("Result: {:?}", row);
+        .await;
+
+    println!(
+        "Local query result: {:?}, Guard result: {:?}",
+        count, item_count
+    );
 
     Ok(Template::render("index", map))
 }

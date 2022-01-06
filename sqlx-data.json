@@ -1,11 +1,11 @@
 {
   "db": "SQLite",
-  "af336298b004158de5865ad633e95e64c5d2a0a4319226546912398874d1eefb": {
-    "query": "SELECT (150) as num",
+  "0fe220adb4dc37c820227059e054dc3202e3c138b8fd0afc9621d830722f7010": {
+    "query": "SELECT count(*) as count FROM item",
     "describe": {
       "columns": [
         {
-          "name": "num",
+          "name": "count",
           "ordinal": 0,
           "type_info": "Int"
         }
