@@ -9,8 +9,9 @@ use rocket::{get, routes};
 use rocket_dyn_templates::Template;
 use sqlx::{migrate::Migrator, sqlite};
 
-use db::DB;
-use error::Result;
+use crate::db::item::Item;
+use crate::db::DB;
+use crate::error::Result;
 
 mod db;
 mod error;
@@ -28,13 +29,13 @@ async fn index_html(pool: &rocket::State<DB>, item_count: db::ItemCount) -> Resu
     let mut map: HashMap<&str, Vec<File>> = HashMap::new();
     map.insert("files", files);
 
-    let count = sqlx::query!("SELECT count(*) as count FROM item")
-        .fetch_one(pool.inner())
+    let item = sqlx::query_as!(Item, "SELECT * FROM item")
+        .fetch_all(pool.inner())
         .await;
 
     println!(
         "Local query result: {:?}, Guard result: {:?}",
-        count, item_count
+        item, item_count
     );
 
     Ok(Template::render("index", map))

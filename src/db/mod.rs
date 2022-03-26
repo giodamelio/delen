@@ -6,6 +6,8 @@ use sqlx::{Pool, Sqlite};
 
 use crate::error::Error;
 
+pub mod item;
+
 // Type alias for the db connection
 pub type DB = Pool<Sqlite>;
 
