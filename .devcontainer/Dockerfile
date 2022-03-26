@@ -18,6 +18,7 @@ RUN wget https://github.com/ducaale/xh/releases/download/v0.14.1/xh-v0.14.1-x86_
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-# [Optional] Uncomment the next lines to use go get to install anything else you need
-# USER vscode
-# RUN go get -x <your-dependency-or-tool>
+# Install the SQLBoiler tools
+USER vscode
+RUN go install github.com/volatiletech/sqlboiler/v4@latest \
+  && go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-sqlite3@latest
