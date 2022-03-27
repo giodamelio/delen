@@ -12,52 +12,65 @@ import "testing"
 // It does NOT run each operation group in parallel.
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
-	t.Run("Users", testUsers)
+	t.Run("GooseDBVersions", testGooseDBVersions)
+	t.Run("Items", testItems)
 }
 
 func TestDelete(t *testing.T) {
-	t.Run("Users", testUsersDelete)
+	t.Run("GooseDBVersions", testGooseDBVersionsDelete)
+	t.Run("Items", testItemsDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
-	t.Run("Users", testUsersQueryDeleteAll)
+	t.Run("GooseDBVersions", testGooseDBVersionsQueryDeleteAll)
+	t.Run("Items", testItemsQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
-	t.Run("Users", testUsersSliceDeleteAll)
+	t.Run("GooseDBVersions", testGooseDBVersionsSliceDeleteAll)
+	t.Run("Items", testItemsSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
-	t.Run("Users", testUsersExists)
+	t.Run("GooseDBVersions", testGooseDBVersionsExists)
+	t.Run("Items", testItemsExists)
 }
 
 func TestFind(t *testing.T) {
-	t.Run("Users", testUsersFind)
+	t.Run("GooseDBVersions", testGooseDBVersionsFind)
+	t.Run("Items", testItemsFind)
 }
 
 func TestBind(t *testing.T) {
-	t.Run("Users", testUsersBind)
+	t.Run("GooseDBVersions", testGooseDBVersionsBind)
+	t.Run("Items", testItemsBind)
 }
 
 func TestOne(t *testing.T) {
-	t.Run("Users", testUsersOne)
+	t.Run("GooseDBVersions", testGooseDBVersionsOne)
+	t.Run("Items", testItemsOne)
 }
 
 func TestAll(t *testing.T) {
-	t.Run("Users", testUsersAll)
+	t.Run("GooseDBVersions", testGooseDBVersionsAll)
+	t.Run("Items", testItemsAll)
 }
 
 func TestCount(t *testing.T) {
-	t.Run("Users", testUsersCount)
+	t.Run("GooseDBVersions", testGooseDBVersionsCount)
+	t.Run("Items", testItemsCount)
 }
 
 func TestHooks(t *testing.T) {
-	t.Run("Users", testUsersHooks)
+	t.Run("GooseDBVersions", testGooseDBVersionsHooks)
+	t.Run("Items", testItemsHooks)
 }
 
 func TestInsert(t *testing.T) {
-	t.Run("Users", testUsersInsert)
-	t.Run("Users", testUsersInsertWhitelist)
+	t.Run("GooseDBVersions", testGooseDBVersionsInsert)
+	t.Run("GooseDBVersions", testGooseDBVersionsInsertWhitelist)
+	t.Run("Items", testItemsInsert)
+	t.Run("Items", testItemsInsertWhitelist)
 }
 
 // TestToOne tests cannot be run in parallel
@@ -101,21 +114,26 @@ func TestToManySet(t *testing.T) {}
 func TestToManyRemove(t *testing.T) {}
 
 func TestReload(t *testing.T) {
-	t.Run("Users", testUsersReload)
+	t.Run("GooseDBVersions", testGooseDBVersionsReload)
+	t.Run("Items", testItemsReload)
 }
 
 func TestReloadAll(t *testing.T) {
-	t.Run("Users", testUsersReloadAll)
+	t.Run("GooseDBVersions", testGooseDBVersionsReloadAll)
+	t.Run("Items", testItemsReloadAll)
 }
 
 func TestSelect(t *testing.T) {
-	t.Run("Users", testUsersSelect)
+	t.Run("GooseDBVersions", testGooseDBVersionsSelect)
+	t.Run("Items", testItemsSelect)
 }
 
 func TestUpdate(t *testing.T) {
-	t.Run("Users", testUsersUpdate)
+	t.Run("GooseDBVersions", testGooseDBVersionsUpdate)
+	t.Run("Items", testItemsUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
-	t.Run("Users", testUsersSliceUpdateAll)
+	t.Run("GooseDBVersions", testGooseDBVersionsSliceUpdateAll)
+	t.Run("Items", testItemsSliceUpdateAll)
 }

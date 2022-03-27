@@ -6,5 +6,7 @@ package models
 import "testing"
 
 func TestUpsert(t *testing.T) {
-	t.Run("Users", testUsersUpsert)
+	t.Run("GooseDBVersions", testGooseDBVersionsUpsert)
+
+	t.Run("Items", testItemsUpsert)
 }
