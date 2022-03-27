@@ -21,4 +21,5 @@ RUN wget https://github.com/ducaale/xh/releases/download/v0.14.1/xh-v0.14.1-x86_
 # Install the SQLBoiler tools
 USER vscode
 RUN go install github.com/volatiletech/sqlboiler/v4@latest \
-  && go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-sqlite3@latest
+  && go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-sqlite3@latest \
+  && go install github.com/pressly/goose/v3/cmd/goose@latest
