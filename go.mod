@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/friendsofgo/errors v0.9.2
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/viper v1.9.0

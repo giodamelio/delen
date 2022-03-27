@@ -4,8 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 
 	"github.com/giodamelio/delen/models"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -13,6 +16,18 @@ import (
 )
 
 func main() {
+	r := chi.NewRouter()
+
+	r.Use(middleware.Logger)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("welcome"))
+	})
+
+	fmt.Println("Listening on port 3000")
+	http.ListenAndServe(":3000", r)
+}
+
+func dbStuff() {
 	db, err := sql.Open("sqlite3", "db.sqlite3")
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
