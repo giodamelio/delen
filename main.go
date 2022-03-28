@@ -4,9 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/giodamelio/delen/models"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/mattn/go-sqlite3"
@@ -20,7 +22,13 @@ func main() {
 
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome"))
+		file, err := templates.Open("templates/index.html")
+		if err != nil {
+			panic(err)
+		}
+
+		io.Copy(w, file)
+		// w.Write([]byte("welcome"))
 	})
 
 	fmt.Println("Listening on port 3000")
