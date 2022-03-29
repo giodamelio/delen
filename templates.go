@@ -19,8 +19,8 @@ func init() {
 	templates = make(map[string]*template.Template)
 
 	templateDefinitions := map[string][]string{
-		"index.html":  {"base.html", "index.html"},
-		"upload.html": {"upload.html"},
+		"index":  {"base.html", "index.html"},
+		"upload": {"upload.html"},
 	}
 
 	for name, templateParts := range templateDefinitions {
@@ -52,7 +52,7 @@ func renderPage(filename string, w io.Writer, data any) error {
 }
 
 func renderIndex(w io.Writer, items models.ItemSlice) error {
-	return renderPage("index.html", w, struct {
+	return renderPage("index", w, struct {
 		Items models.ItemSlice
 	}{
 		Items: items,
@@ -60,5 +60,5 @@ func renderIndex(w io.Writer, items models.ItemSlice) error {
 }
 
 func renderUpload(w io.Writer) error {
-	return renderPage("upload.html", w, nil)
+	return renderPage("upload", w, nil)
 }
