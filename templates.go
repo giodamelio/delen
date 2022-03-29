@@ -19,8 +19,8 @@ func init() {
 	templates = make(map[string]*template.Template)
 
 	templateDefinitions := map[string][]string{
-		"index":  {"base.html", "index.html"},
-		"upload": {"upload.html"},
+		"index":  {"base.html", "index.html", "section/upload.html"},
+		"upload": {"section/upload-result.html"},
 	}
 
 	for name, templateParts := range templateDefinitions {
