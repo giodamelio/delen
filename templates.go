@@ -18,19 +18,25 @@ var templates map[string]*template.Template
 func init() {
 	templates = make(map[string]*template.Template)
 
-	files, _ := templateFS.ReadDir("templates")
-	for _, file := range files {
-		if file.Name() == "base.index" {
-			continue
+	templateDefinitions := map[string][]string{
+		"index.html":  {"base.html", "index.html"},
+		"upload.html": {"upload.html"},
+	}
+
+	for name, templateParts := range templateDefinitions {
+		// Put templates/ on the front of each part
+		partsWithPrefix := make([]string, len(templateParts))
+		for i, part := range templateParts {
+			partsWithPrefix[i] = "templates/" + part
 		}
 
-		template, err := template.ParseFS(templateFS, "templates/base.html", "templates/"+file.Name())
+		template, err := template.ParseFS(templateFS, partsWithPrefix...)
 		// Panic at startup if any of the templates are malformed
 		if err != nil {
 			panic(err)
 		}
 
-		templates[file.Name()] = template
+		templates[name] = template
 	}
 }
 
