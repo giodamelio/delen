@@ -17,6 +17,10 @@ migrate-up:
 migrate-down:
   goose -dir ./migrations sqlite3 ./db.sqlite3 down
 
+# Generate the SQL code
+db-generate:
+  sqlboiler sqlite3
+
 # Reset the DB
 db-reset:
   rm db.sqlite3
