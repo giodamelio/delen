@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/pkg/errors v0.8.1
+	github.com/sanity-io/litter v1.5.4
 	github.com/spf13/viper v1.9.0
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/randomize v0.0.1
