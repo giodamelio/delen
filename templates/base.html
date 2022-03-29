@@ -5,13 +5,28 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{block "title" .}}{{end}}</title>
+  <title>{{block "title" .}}Delen{{end}}</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css"
+    integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/grids-responsive-min.css"
+    integrity="sha384-X1BMriV1dKJDaENC6Xyeh+9/UOYgx3JRSzEmO4mH4SI2dAjJJeUkvZQP3jhXLUXy" crossorigin="anonymous">
+
+  <style>
+    .container {
+      max-width: 1140px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Delen!</h1>
+  <div class="container">
+    <h1>Delen</h1>
 
-  {{block "content" .}}{{end}}
+    {{block "content" .}}{{end}}
+  </div>
 </body>
 
 </html>

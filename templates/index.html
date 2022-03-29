@@ -1,16 +1,16 @@
-{{define "title" -}}
-Hello
-{{- end}}
-
 {{define "content"}}
-<h1>Items:</h1>
-{{if gt (len .Items) 0}}
-<ul>
-  {{range $item := .Items}}
-  <li>{{$item.Name}}</li>
-  {{end}}
-</ul>
-{{else}}
-No items
-{{end}}
+<div class="pure-g">
+  <div class="pure-u-1">
+    <h1>Items:</h1>
+    {{if gt (len .Items) 0}}
+    <ul>
+      {{range $item := .Items}}
+      <li>{{$item.Name}}</li>
+      {{end}}
+    </ul>
+    {{else}}
+    No items
+    {{end}}
+  </div>
+</div>
 {{end}}
