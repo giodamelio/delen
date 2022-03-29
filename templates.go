@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"net/http"
 
 	"github.com/giodamelio/delen/models"
 )
@@ -19,6 +20,7 @@ func init() {
 	templates = make(map[string]*template.Template)
 
 	templateDefinitions := map[string][]string{
+		"error":         {"error.html"},
 		"index":         {"base.html", "index.html", "section/upload.html"},
 		"upload":        {"section/upload.html"},
 		"upload-result": {"section/upload-result.html"},
@@ -50,6 +52,11 @@ func renderPage(filename string, w io.Writer, data any) error {
 	}
 
 	return nil
+}
+
+func renderError(w http.ResponseWriter, err error) error {
+	w.Header().Set("Content-Type", "text/html")
+	return renderPage("error", w, err)
 }
 
 func renderIndex(w io.Writer, items models.ItemSlice) error {

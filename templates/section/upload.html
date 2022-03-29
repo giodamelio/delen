@@ -1,6 +1,6 @@
 <div class="pure-g" id="section-upload">
   <div class="pure-u-1 pure-u-lg-1-2 l-box">
-    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload?type=file"
+    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload/file"
       hx-target="#section-upload" hx-swap="outerHTML">
       <fieldset>
         <legend>Upload File</legend>
@@ -20,7 +20,7 @@
     </form>
   </div>
   <div class="pure-u-1 pure-u-lg-1-2 l-box">
-    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload?type=text"
+    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload/text"
       hx-target="#section-upload" hx-swap="outerHTML">
       <fieldset>
         <legend>Upload Text</legend>
