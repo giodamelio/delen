@@ -21,9 +21,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		renderIndex(w)
-	})
+	r.Get("/", handleIndex)
 
 	fmt.Println("Listening on port 3000")
 	http.ListenAndServe(":3000", r)
