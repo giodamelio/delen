@@ -3,5 +3,14 @@ Hello
 {{- end}}
 
 {{define "content"}}
-<h1>Hello World!</h1>
+<h1>Items:</h1>
+{{if gt (len .Items) 0}}
+<ul>
+  {{range $item := .Items}}
+  <li>{{$item.Name}}</li>
+  {{end}}
+</ul>
+{{else}}
+No items
+{{end}}
 {{end}}

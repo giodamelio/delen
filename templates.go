@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+
+	"github.com/giodamelio/delen/models"
 )
 
 // Embed all the templates into the binary
@@ -43,6 +45,10 @@ func renderPage(filename string, w io.Writer, data any) error {
 	return nil
 }
 
-func renderIndex(w io.Writer) error {
-	return renderPage("index.html", w, nil)
+func renderIndex(w io.Writer, items models.ItemSlice) error {
+	return renderPage("index.html", w, struct {
+		Items models.ItemSlice
+	}{
+		Items: items,
+	})
 }

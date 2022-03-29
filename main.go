@@ -17,14 +17,37 @@ import (
 )
 
 func main() {
+	// Setup the DB
+	err := setupDb()
+	if err != nil {
+		panic(err)
+	}
+
+	// Setup the router
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
 
 	r.Get("/", handleIndex)
 
+	// Start the server
 	fmt.Println("Listening on port 3000")
 	http.ListenAndServe(":3000", r)
+}
+
+func setupDb() error {
+	db, err := sql.Open("sqlite3", "db.sqlite3")
+	if err != nil {
+		return err
+	}
+
+	// Print all the SQL Queries as they are run
+	boil.DebugMode = true
+
+	// Set the global DB
+	boil.SetDB(db)
+
+	return nil
 }
 
 func dbStuff() {
