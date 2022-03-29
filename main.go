@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/giodamelio/delen/models"
@@ -21,14 +20,9 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		file, err := templates.Open("templates/index.html")
-		if err != nil {
-			panic(err)
-		}
 
-		io.Copy(w, file)
-		// w.Write([]byte("welcome"))
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		renderIndex(w)
 	})
 
 	fmt.Println("Listening on port 3000")
