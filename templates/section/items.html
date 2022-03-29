@@ -8,6 +8,7 @@
         <tr>
           <th>Name</th>
           <th>Mime Type</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -15,6 +16,10 @@
         <tr>
           <td>{{$item.Name}}</td>
           <td>{{$item.MimeType}}</td>
+          <td>
+            <button hx-delete="/items/{{$item.ID}}" hx-target="#section-items" hx-swap="outerHTML"
+              class="pure-button pure-button-xsmall">Delete</button>
+          </td>
         </tr>
         {{end}}
       </tbody>

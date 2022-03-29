@@ -2,8 +2,10 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/giodamelio/delen/models"
+	"github.com/go-chi/chi/v5"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
@@ -44,6 +46,26 @@ func handlePostUploadFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetItems(w http.ResponseWriter, r *http.Request) {
+	items, err := models.Items().AllG(r.Context())
+	if err != nil {
+		renderError(w, err)
+		return
+	}
+
+	renderItems(w, items)
+}
+
+func handleDeleteItems(w http.ResponseWriter, r *http.Request) {
+	// Delete the item
+	id_string := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(id_string, 10, 64)
+	if err != nil {
+		renderError(w, err)
+		return
+	}
+	models.Items(models.ItemWhere.ID.EQ(id)).DeleteAllG(r.Context())
+
+	// Rerender without that item
 	items, err := models.Items().AllG(r.Context())
 	if err != nil {
 		panic(err)
