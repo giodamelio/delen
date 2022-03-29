@@ -11,7 +11,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	. "github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
@@ -68,7 +67,7 @@ func dbStuff() {
 	fmt.Println("Insert an item")
 	var newItem models.Item
 	newItem.Name = "Gio"
-	newItem.Contents = null.BytesFrom([]byte{1, 2, 3})
+	newItem.Contents = []byte{1, 2, 3}
 	err = newItem.InsertG(ctx, boil.Infer())
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -101,7 +100,7 @@ func dbStuff() {
 	fmt.Println("Insert a item")
 	var anotherNewitem models.Item
 	anotherNewitem.Name = "Gio"
-	anotherNewitem.Contents = null.BytesFrom([]byte{1, 2, 3})
+	anotherNewitem.Contents = []byte{1, 2, 3}
 	err = anotherNewitem.InsertG(ctx, boil.Infer())
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)

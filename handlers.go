@@ -5,7 +5,6 @@ import (
 
 	"github.com/giodamelio/delen/models"
 	"github.com/sanity-io/litter"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
@@ -30,7 +29,9 @@ func handlePostUploadText(w http.ResponseWriter, r *http.Request) {
 	// Create a new item
 	var newItem models.Item
 	newItem.Name = r.FormValue("name")
-	newItem.Contents = null.BytesFrom([]byte(r.FormValue("contents")))
+	newItem.Contents = []byte(r.FormValue("contents"))
+	newItem.MimeType = "text/plain"
+
 	err := newItem.InsertG(r.Context(), boil.Infer())
 	if err != nil {
 		renderError(w, err)

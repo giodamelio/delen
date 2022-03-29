@@ -24,10 +24,10 @@ import (
 
 // Item is an object representing the database table.
 type Item struct {
-	ID       null.Int64  `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	Name     string      `boil:"name" json:"name" toml:"name" yaml:"name"`
-	MimeType null.String `boil:"mimeType" json:"mimeType,omitempty" toml:"mimeType" yaml:"mimeType,omitempty"`
-	Contents null.Bytes  `boil:"contents" json:"contents,omitempty" toml:"contents" yaml:"contents,omitempty"`
+	ID       null.Int64 `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	Name     string     `boil:"name" json:"name" toml:"name" yaml:"name"`
+	MimeType string     `boil:"mimeType" json:"mimeType" toml:"mimeType" yaml:"mimeType"`
+	Contents []byte     `boil:"contents" json:"contents" toml:"contents" yaml:"contents"`
 
 	R *itemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L itemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -82,40 +82,25 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
-type whereHelpernull_Bytes struct{ field string }
+type whereHelper__byte struct{ field string }
 
-func (w whereHelpernull_Bytes) EQ(x null.Bytes) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Bytes) NEQ(x null.Bytes) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Bytes) LT(x null.Bytes) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Bytes) LTE(x null.Bytes) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Bytes) GT(x null.Bytes) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Bytes) GTE(x null.Bytes) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_Bytes) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Bytes) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelper__byte) EQ(x []byte) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelper__byte) NEQ(x []byte) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelper__byte) LT(x []byte) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelper__byte) LTE(x []byte) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelper__byte) GT(x []byte) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelper__byte) GTE(x []byte) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
 
 var ItemWhere = struct {
 	ID       whereHelpernull_Int64
 	Name     whereHelperstring
-	MimeType whereHelpernull_String
-	Contents whereHelpernull_Bytes
+	MimeType whereHelperstring
+	Contents whereHelper__byte
 }{
 	ID:       whereHelpernull_Int64{field: "\"items\".\"id\""},
 	Name:     whereHelperstring{field: "\"items\".\"name\""},
-	MimeType: whereHelpernull_String{field: "\"items\".\"mimeType\""},
-	Contents: whereHelpernull_Bytes{field: "\"items\".\"contents\""},
+	MimeType: whereHelperstring{field: "\"items\".\"mimeType\""},
+	Contents: whereHelper__byte{field: "\"items\".\"contents\""},
 }
 
 // ItemRels is where relationship names are stored.
@@ -136,8 +121,8 @@ type itemL struct{}
 
 var (
 	itemAllColumns            = []string{"id", "name", "mimeType", "contents"}
-	itemColumnsWithoutDefault = []string{"name"}
-	itemColumnsWithDefault    = []string{"id", "mimeType", "contents"}
+	itemColumnsWithoutDefault = []string{"name", "mimeType", "contents"}
+	itemColumnsWithDefault    = []string{"id"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{"id"}
 )
