@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -24,10 +23,10 @@ import (
 
 // Item is an object representing the database table.
 type Item struct {
-	ID       null.Int64 `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	Name     string     `boil:"name" json:"name" toml:"name" yaml:"name"`
-	MimeType string     `boil:"mimeType" json:"mimeType" toml:"mimeType" yaml:"mimeType"`
-	Contents []byte     `boil:"contents" json:"contents" toml:"contents" yaml:"contents"`
+	ID       int64  `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Name     string `boil:"name" json:"name" toml:"name" yaml:"name"`
+	MimeType string `boil:"mimeType" json:"mimeType" toml:"mimeType" yaml:"mimeType"`
+	Contents []byte `boil:"contents" json:"contents" toml:"contents" yaml:"contents"`
 
 	R *itemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L itemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -92,12 +91,12 @@ func (w whereHelper__byte) GT(x []byte) qm.QueryMod  { return qmhelper.Where(w.f
 func (w whereHelper__byte) GTE(x []byte) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
 
 var ItemWhere = struct {
-	ID       whereHelpernull_Int64
+	ID       whereHelperint64
 	Name     whereHelperstring
 	MimeType whereHelperstring
 	Contents whereHelper__byte
 }{
-	ID:       whereHelpernull_Int64{field: "\"items\".\"id\""},
+	ID:       whereHelperint64{field: "\"items\".\"id\""},
 	Name:     whereHelperstring{field: "\"items\".\"name\""},
 	MimeType: whereHelperstring{field: "\"items\".\"mimeType\""},
 	Contents: whereHelper__byte{field: "\"items\".\"contents\""},
@@ -432,13 +431,13 @@ func Items(mods ...qm.QueryMod) itemQuery {
 }
 
 // FindItemG retrieves a single record by ID.
-func FindItemG(ctx context.Context, iD null.Int64, selectCols ...string) (*Item, error) {
+func FindItemG(ctx context.Context, iD int64, selectCols ...string) (*Item, error) {
 	return FindItem(ctx, boil.GetContextDB(), iD, selectCols...)
 }
 
 // FindItem retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindItem(ctx context.Context, exec boil.ContextExecutor, iD null.Int64, selectCols ...string) (*Item, error) {
+func FindItem(ctx context.Context, exec boil.ContextExecutor, iD int64, selectCols ...string) (*Item, error) {
 	itemObj := &Item{}
 
 	sel := "*"
@@ -998,12 +997,12 @@ func (o *ItemSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) er
 }
 
 // ItemExistsG checks if the Item row exists.
-func ItemExistsG(ctx context.Context, iD null.Int64) (bool, error) {
+func ItemExistsG(ctx context.Context, iD int64) (bool, error) {
 	return ItemExists(ctx, boil.GetContextDB(), iD)
 }
 
 // ItemExists checks if the Item row exists.
-func ItemExists(ctx context.Context, exec boil.ContextExecutor, iD null.Int64) (bool, error) {
+func ItemExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (bool, error) {
 	var exists bool
 	sql := "select exists(select 1 from \"items\" where \"id\"=? limit 1)"
 
