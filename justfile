@@ -16,3 +16,8 @@ migrate-up:
 # Roll back all the migrations
 migrate-down:
   goose -dir ./migrations sqlite3 ./db.sqlite3 down
+
+# Reset the DB
+db-reset:
+  rm db.sqlite3
+  @just migrate-up
