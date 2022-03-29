@@ -5,18 +5,5 @@
   </div>
 </div>
 {{template "upload.html"}}
-<div class="pure-g">
-  <div class="pure-u-1">
-    <h1>Items:</h1>
-    {{if gt (len .Items) 0}}
-    <ul>
-      {{range $item := .Items}}
-      <li>{{$item.Name}}</li>
-      {{end}}
-    </ul>
-    {{else}}
-    No items
-    {{end}}
-  </div>
-</div>
+{{template "items.html" .Items}}
 {{end}}

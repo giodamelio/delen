@@ -31,6 +31,7 @@ func main() {
 	r.Get("/upload", handleGetUpload)
 	r.Post("/upload/text", handlePostUploadText)
 	r.Post("/upload/file", handlePostUploadFile)
+	r.Get("/items", handleGetItems)
 
 	// Start the server
 	fmt.Println("Listening on port 3000")

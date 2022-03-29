@@ -1,0 +1,15 @@
+<div class="pure-g" id="section-items">
+  <div class="pure-u-1">
+    <h1>Items:</h1>
+    <button hx-get="/items" hx-target="#section-items" hx-swap="outerHTML">Refresh</button>
+    {{if gt (len .) 0}}
+    <ul>
+      {{range $item := .}}
+      <li>{{$item.Name}}</li>
+      {{end}}
+    </ul>
+    {{else}}
+    No items
+    {{end}}
+  </div>
+</div>

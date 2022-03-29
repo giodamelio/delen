@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/giodamelio/delen/models"
-	"github.com/sanity-io/litter"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
@@ -24,7 +23,6 @@ func handleGetUpload(w http.ResponseWriter, r *http.Request) {
 func handlePostUploadText(w http.ResponseWriter, r *http.Request) {
 	// Max memory before temporary files are used = 10MiB
 	r.ParseMultipartForm(1024 * 1024 * 10)
-	litter.Dump(r.Form)
 
 	// Create a new item
 	var newItem models.Item
@@ -43,4 +41,13 @@ func handlePostUploadText(w http.ResponseWriter, r *http.Request) {
 
 func handlePostUploadFile(w http.ResponseWriter, r *http.Request) {
 	renderUploadResult(w)
+}
+
+func handleGetItems(w http.ResponseWriter, r *http.Request) {
+	items, err := models.Items().AllG(r.Context())
+	if err != nil {
+		panic(err)
+	}
+
+	renderItems(w, items)
 }

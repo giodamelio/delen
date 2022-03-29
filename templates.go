@@ -21,9 +21,10 @@ func init() {
 
 	templateDefinitions := map[string][]string{
 		"error":         {"error.html"},
-		"index":         {"base.html", "index.html", "section/upload.html"},
+		"index":         {"base.html", "index.html", "section/upload.html", "section/items.html"},
 		"upload":        {"section/upload.html"},
 		"upload-result": {"section/upload-result.html"},
+		"items":         {"section/items.html"},
 	}
 
 	for name, templateParts := range templateDefinitions {
@@ -73,4 +74,8 @@ func renderUpload(w io.Writer) error {
 
 func renderUploadResult(w io.Writer) error {
 	return renderPage("upload-result", w, nil)
+}
+
+func renderItems(w io.Writer, items models.ItemSlice) error {
+	return renderPage("items", w, items)
 }
