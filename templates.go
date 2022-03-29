@@ -58,3 +58,7 @@ func renderIndex(w io.Writer, items models.ItemSlice) error {
 		Items: items,
 	})
 }
+
+func renderUpload(w io.Writer) error {
+	return renderPage("upload.html", w, nil)
+}
