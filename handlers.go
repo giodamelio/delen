@@ -15,6 +15,10 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	renderIndex(w, items)
 }
 
-func handleUpload(w http.ResponseWriter, r *http.Request) {
+func handleGetUpload(w http.ResponseWriter, r *http.Request) {
 	renderUpload(w)
+}
+
+func handlePostUpload(w http.ResponseWriter, r *http.Request) {
+	renderUploadResult(w)
 }

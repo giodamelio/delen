@@ -1,6 +1,6 @@
 <div class="pure-g" id="section-upload">
   <div class="pure-u-1 pure-u-lg-1-2">
-    <form id="form" hx-encoding="multipart/form-data" hx-post="/upload" hx-target="#section-upload">
+    <form id="form" hx-encoding="multipart/form-data" hx-post="/upload" hx-target="#section-upload" hx-swap="outerHTML">
       <input type="file" name="file">
       <button>
         Upload
@@ -8,7 +8,7 @@
     </form>
   </div>
   <div class="pure-u-1 pure-u-lg-1-2">
-    <form id="form" hx-encoding="multipart/form-data" hx-post="/upload" hx-target="#section-upload">
+    <form id="form" hx-encoding="multipart/form-data" hx-post="/upload" hx-target="#section-upload" hx-swap="outerHTML">
       <input type="text" name="file">
       <button>
         Upload

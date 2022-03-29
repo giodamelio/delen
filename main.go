@@ -29,7 +29,8 @@ func main() {
 	r.Use(middleware.Logger)
 
 	r.Get("/", handleIndex)
-	r.Post("/upload", handleUpload)
+	r.Get("/upload", handleGetUpload)
+	r.Post("/upload", handlePostUpload)
 
 	// Start the server
 	fmt.Println("Listening on port 3000")
