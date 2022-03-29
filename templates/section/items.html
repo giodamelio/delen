@@ -3,11 +3,22 @@
     <h1>Items:</h1>
     <button hx-get="/items" hx-target="#section-items" hx-swap="outerHTML">Refresh</button>
     {{if gt (len .) 0}}
-    <ul>
-      {{range $item := .}}
-      <li>{{$item.Name}}</li>
-      {{end}}
-    </ul>
+    <table class="pure-table pure-table-bordered width-100">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Mime Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range $item := .}}
+        <tr>
+          <td>{{$item.Name}}</td>
+          <td>{{$item.MimeType}}</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
     {{else}}
     No items
     {{end}}
