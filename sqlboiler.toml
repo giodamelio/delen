@@ -1,5 +1,0 @@
-wipe = true
-add-global-variants = true
-
-[sqlite3]
-dbname = "./db.sqlite3"
