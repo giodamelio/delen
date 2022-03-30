@@ -1,8 +1,13 @@
 #[macro_use]
 extern crate rocket;
 
-use rocket::serde::{json::Json, Serialize};
+use rocket::{
+    http::Accept,
+    serde::{json::Json, Serialize},
+};
 use rocket_dyn_templates::Template;
+
+mod fairings;
 
 #[derive(Serialize)]
 #[serde(crate = "rocket::serde")]
@@ -32,5 +37,7 @@ fn index_json() -> Json<Index> {
 fn rocket() -> _ {
     rocket::build()
         .attach(Template::fairing())
+        .attach(fairings::ExtensionRewrite::new(".json", Accept::JSON))
+        .attach(fairings::ExtensionRewrite::new(".html", Accept::HTML))
         .mount("/", routes![index_html, index_json])
 }
