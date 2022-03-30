@@ -25,7 +25,9 @@ func main() {
 	// Setup the router
 	r := chi.NewRouter()
 
+	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
 	r.Get("/", handleIndex)
 	r.Get("/upload", handleGetUpload)
