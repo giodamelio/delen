@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -22,29 +23,6 @@ func handleGetUpload(w http.ResponseWriter, r *http.Request) {
 	renderUpload(w)
 }
 
-func handlePostUploadText(w http.ResponseWriter, r *http.Request) {
-	// Max memory before temporary files are used = 10MiB
-	r.ParseMultipartForm(1024 * 1024 * 10)
-
-	// Create a new item
-	var newItem models.Item
-	newItem.Name = r.FormValue("name")
-	newItem.Contents = []byte(r.FormValue("contents"))
-	newItem.MimeType = "text/plain"
-
-	err := newItem.InsertG(r.Context(), boil.Infer())
-	if err != nil {
-		renderError(w, err)
-		return
-	}
-
-	renderUploadResult(w)
-}
-
-func handlePostUploadFile(w http.ResponseWriter, r *http.Request) {
-	renderUploadResult(w)
-}
-
 func handleGetItems(w http.ResponseWriter, r *http.Request) {
 	items, err := models.Items().AllG(r.Context())
 	if err != nil {
@@ -53,6 +31,32 @@ func handleGetItems(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderItems(w, items)
+}
+
+func handlePostItems(w http.ResponseWriter, r *http.Request) {
+	// Max memory before temporary files are used = 10MiB
+	r.ParseMultipartForm(1024 * 1024 * 10)
+
+	switch r.FormValue("type") {
+	case "text":
+		// Create a new item
+		var newItem models.Item
+		newItem.Name = r.FormValue("name")
+		newItem.Contents = []byte(r.FormValue("contents"))
+		newItem.MimeType = "text/plain" // Default to text/plain since none can currently be specified
+
+		err := newItem.InsertG(r.Context(), boil.Infer())
+		if err != nil {
+			renderError(w, err)
+			return
+		}
+
+		renderUploadResult(w)
+	case "file":
+		renderError(w, fmt.Errorf("file upload currently not implemented"))
+	default:
+		renderError(w, fmt.Errorf("item type must be one of 'text' and 'file'"))
+	}
 }
 
 func handleDeleteItems(w http.ResponseWriter, r *http.Request) {

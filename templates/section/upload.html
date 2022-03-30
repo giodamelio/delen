@@ -1,6 +1,6 @@
 <div class="pure-g" id="section-upload">
   <div class="pure-u-1 pure-u-lg-1-2 l-box">
-    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload/file"
+    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/api/items"
       hx-target="#section-upload" hx-swap="outerHTML">
       <fieldset>
         <legend>Upload File</legend>
@@ -11,6 +11,8 @@
         <label for="file">File</label>
         <input type="file" class="pure-input-1" name="file" required="required">
 
+        <input type="hidden" name="type" value="file">
+
         <div class="pure-controls">
           <button type="submit" class="pure-button pure-button-primary">
             Upload
@@ -20,7 +22,7 @@
     </form>
   </div>
   <div class="pure-u-1 pure-u-lg-1-2 l-box">
-    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/upload/text"
+    <form id="form" class="pure-form pure-form-stacked" hx-encoding="multipart/form-data" hx-post="/api/items"
       hx-target="#section-upload" hx-swap="outerHTML">
       <fieldset>
         <legend>Upload Text</legend>
@@ -30,6 +32,8 @@
 
         <label for="contents">Text</label>
         <textarea class="pure-input-1" name="contents" placeholder="Contents" required="required"></textarea>
+
+        <input type="hidden" name="type" value="text">
 
         <div class="pure-controls">
           <button type="submit" class="pure-button pure-button-primary">

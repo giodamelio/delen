@@ -1,7 +1,7 @@
 <div class="pure-g" id="section-items">
   <div class="pure-u-1">
     <h1>Items:</h1>
-    <button hx-get="/items" hx-target="#section-items" hx-swap="outerHTML">Refresh</button>
+    <button hx-get="/api/items" hx-target="#section-items" hx-swap="outerHTML">Refresh</button>
     {{if gt (len .) 0}}
     <table class="pure-table pure-table-bordered width-100">
       <thead>
@@ -17,7 +17,7 @@
           <td>{{$item.Name}}</td>
           <td>{{$item.MimeType}}</td>
           <td>
-            <button hx-delete="/items/{{$item.ID}}" hx-target="#section-items" hx-swap="outerHTML"
+            <button hx-delete="/api/items/{{$item.ID}}" hx-target="#section-items" hx-swap="outerHTML"
               class="pure-button pure-button-xsmall">Delete</button>
           </td>
         </tr>

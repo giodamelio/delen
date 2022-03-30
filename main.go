@@ -29,11 +29,12 @@ func main() {
 
 	r.Get("/", handleIndex)
 	r.Get("/upload", handleGetUpload)
-	r.Post("/upload/text", handlePostUploadText)
-	r.Post("/upload/file", handlePostUploadFile)
 
-	r.Get("/items", handleGetItems)
-	r.Delete("/items/{id}", handleDeleteItems)
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/items", handleGetItems)
+		r.Post("/items", handlePostItems)
+		r.Delete("/items/{id}", handleDeleteItems)
+	})
 
 	// Start the server
 	fmt.Println("Listening on port 3000")
