@@ -30,6 +30,16 @@ RUN apt-get update \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/* /tmp/common-setup.sh /tmp/node-setup.sh
 
+# Install Just
+RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin/
+
+# Install xh for making http requests
+RUN wget https://github.com/ducaale/xh/releases/download/v0.14.1/xh-v0.14.1-x86_64-unknown-linux-musl.tar.gz -O xh.tar.gz \
+  && tar -xf xh.tar.gz \
+  && install xh-*/xh /usr/local/bin/ \
+  && cp xh-*/doc/xh.1 /usr/share/man/man1/ \
+  && mandb
+
 RUN su ${USERNAME} -c "mix local.hex --force \
   && mix local.rebar --force"
 
