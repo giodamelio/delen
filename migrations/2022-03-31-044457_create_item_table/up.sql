@@ -1,6 +1,0 @@
-CREATE TABLE item (
-  id INTEGER PRIMARY KEY NOT NULL,
-  name TEXT NOT NULL,
-  mime_type TEXT NOT NULL,
-  contents BLOB NOT NULL
-);
